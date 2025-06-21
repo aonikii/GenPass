@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Вход</h1>
+    </header>
+
+    <main>
+        <form method="POST" action="/login">
+            <div>
+                <input type="text" name="username" placeholder="Имя пользователя" required>
+            </div>
+            <div>
+                <input type="password" name="password" placeholder="Пароль" required>
+            </div>
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn">Войти</button>
+            </div>
+        </form>
+        <p style="margin-top: 20px;">
+            Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+        </p>
+        {{if .Error}}
+        <p style="color:red;">{{.Error}}</p>
+        {{end}}
+    </main>
+</body>
+</html>
