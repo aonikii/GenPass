@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"GenPass/internal/database"
+	"GenPass/internal/sessions"
 	"html/template"
 	"net/http"
 )
@@ -12,6 +14,10 @@ func Home(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	switch r.Method {
 	case "GET":
+		if sessions.CheckUserSession(w, r) {
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			return
+		}
 		tmpl.ExecuteTemplate(w, "login.html", nil)
 	case "POST":
 		username := r.FormValue("username")
@@ -21,13 +27,19 @@ func Login(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 			tmpl.ExecuteTemplate(w, "login.html", map[string]string{"Error": res})
 			return
 		}
-		http.Redirect(w, r, "/home", http.StatusSeeOther)
+
+		sessions.AddUserToSession(w, r, database.GetUserInfo(username).Id)
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	}
 }
 
 func Register(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 	switch r.Method {
 	case "GET":
+		if sessions.CheckUserSession(w, r) {
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+			return
+		}
 		tmpl.ExecuteTemplate(w, "register.html", nil)
 	case "POST":
 		username := r.FormValue("username")

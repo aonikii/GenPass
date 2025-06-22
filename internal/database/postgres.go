@@ -1,6 +1,7 @@
 package database
 
 import (
+	"GenPass/internal/models"
 	"database/sql"
 	"log"
 	"os"
@@ -49,11 +50,13 @@ func CheckUserExists(u string) bool {
 	return exists
 }
 
-func GetHashPassword(u string) string {
-	var hashpass string
-	err := db.QueryRow("SELECT password_hash FROM users WHERE username=$1", u).Scan(&hashpass)
+func GetUserInfo(u string) *models.User {
+	var userInfo models.User
+
+	err := db.QueryRow(
+		"SELECT id, username, password_hash FROM users WHERE username=$1", u).Scan(&userInfo.Id, &userInfo.Username, &userInfo.PasswordHash)
 	if err != nil {
 		log.Panic(err)
 	}
-	return hashpass
+	return &userInfo
 }

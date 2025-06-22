@@ -32,7 +32,7 @@ func enterCheck(u, p string) string {
 	if !userExists {
 		return "Пользователь не найден"
 	}
-	err := bcrypt.CompareHashAndPassword([]byte(database.GetHashPassword(u)), []byte(p))
+	err := bcrypt.CompareHashAndPassword([]byte(database.GetUserInfo(u).PasswordHash), []byte(p))
 	if err != nil {
 		return "Имя или пароль введены не верно"
 	}
