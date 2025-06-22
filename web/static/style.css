@@ -28,7 +28,7 @@ main {
 
 form {
     background-color: #1e1e1e;
-    padding: 30px;
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
     width: 300px;
@@ -53,7 +53,7 @@ input::placeholder {
 .btn {
     background-color: #4CAF50;
     color: white;
-    padding: 12px;
+    padding: 16px;
     border: none;
     border-radius: 5px;
     width: 100%;

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header style="text-align: left; padding-left: 40px;">
+        <h1>Dashboard</h1>
+    </header>
+
+    <main style="display: flex; flex-direction: column; align-items: flex-start; padding: 40px;">
+        <section style="margin-bottom: 50px; width: 100%; max-width: 400px;">
+            <h2>Создать новый пароль</h2>
+            <form method="POST" action="/generate" style="display: flex; flex-direction: column; gap: 15px;">
+                <input style="width: 270px; height: 30px; font-size: 17px;" type="text" name="site" placeholder="Название сайта" required class="input-full">
+                <button style="width: 295px;" type="submit" class="btn btn-full">Сгенерировать и сохранить</button>
+            </form>
+        </section>
+
+        <section style="width: 100%; max-width: 700px;">
+            <h2>Сохранённые пароли</h2>
+            <ul>
+                {{range .Passwords}}
+                    <li><strong>{{.Site}}</strong>: {{.Password}}</li>
+                {{else}}
+                    <li>Пароли пока не сохранены</li>
+                {{end}}
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
