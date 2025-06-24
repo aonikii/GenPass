@@ -14,7 +14,17 @@
         <section style="margin-bottom: 50px; width: 100%; max-width: 400px;">
             <h2>Создать новый пароль</h2>
             <form method="POST" action="/generate" style="display: flex; flex-direction: column; gap: 15px;">
-                <input style="width: 270px; height: 30px; font-size: 17px;" type="text" name="site" placeholder="Название сайта" required class="input-full">
+                <input style="width: 270px; height: 30px; font-size: 17px;" 
+                       type="text" name="site" placeholder="Название сайта" required class="input-full">
+
+                <input style="width: 288px; height: 30px; font-size: 17px;" 
+                       type="number" name="length" min="8" max="16" 
+                       placeholder="Длина пароля (8-16)" required class="input-full">
+
+                <label style="font-size: 17px;">
+                    <input type="checkbox" name="include_special" checked> Включать специальные символы
+                </label>
+
                 <button style="width: 295px;" type="submit" class="btn btn-full">Сгенерировать и сохранить</button>
             </form>
         </section>
