@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-var Store *sessions.CookieStore
+var store *sessions.CookieStore
 
 func SessionsInit() {
 	key := os.Getenv("SESSION_KEY")
@@ -16,8 +16,8 @@ func SessionsInit() {
 		log.Fatal("Не удалось достать ключ сессии")
 	}
 
-	Store = sessions.NewCookieStore([]byte(key))
-	Store.Options = &sessions.Options{
+	store = sessions.NewCookieStore([]byte(key))
+	store.Options = &sessions.Options{
 		Path:     "/",
 		MaxAge:   86400 * 7,
 		HttpOnly: true,
@@ -28,7 +28,7 @@ func SessionsInit() {
 }
 
 func AddUserToSession(w http.ResponseWriter, r *http.Request, userId int) {
-	session, err := Store.Get(r, "session")
+	session, err := store.Get(r, "session")
 	if err != nil {
 		http.Error(w, "Ошибка сессии", http.StatusInternalServerError)
 		return
@@ -43,7 +43,7 @@ func AddUserToSession(w http.ResponseWriter, r *http.Request, userId int) {
 }
 
 func CheckUserSession(w http.ResponseWriter, r *http.Request) bool {
-	session, err := Store.Get(r, "session")
+	session, err := store.Get(r, "session")
 	if err != nil {
 		http.Error(w, "Ошибка сессии", http.StatusInternalServerError)
 		return false
