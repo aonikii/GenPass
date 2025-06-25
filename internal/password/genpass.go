@@ -5,20 +5,28 @@ import (
 	"log"
 	"math/big"
 	"strconv"
+	"strings"
 )
 
 const (
-	letters        = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	digits         = "0123456789"
-	specialSymbols = "!$^&*()-=+[]{}"
+	letters                                  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	digits                                   = "0123456789"
+	specialSymbols                           = "!$^&*()-=+[]{}"
+	minDigitsAmountForLengthLessThanEleven   = 2
+	minDigitsAmountForLengthMoreThanTen      = 3
+	minSpecSymbAmountForLengthLessThanEleven = 1
+	minSpecSymbAmountForLengthMoreThanTen    = 2
 )
 
 func GeneratePass(length, isSpecSym string) string {
-	password := ""
+	var password strings.Builder
 	symbPositions := positions(length, isSpecSym)
 	digitsSlice := symbPositions["d"]
 	specSymbSlice := symbPositions["s"]
-	lengthInInt, _ := strconv.Atoi(length)
+	lengthInInt, err := strconv.Atoi(length)
+	if err != nil {
+		log.Panic(err)
+	}
 
 	lettersAmount := lengthInInt - len(digitsSlice) - len(specSymbSlice)
 	setOfLetters, ok := chooseLetters(lettersAmount)
@@ -32,49 +40,58 @@ func GeneratePass(length, isSpecSym string) string {
 			if err != nil {
 				log.Panic(err)
 			}
-			password += string(digits[int(add.Int64())])
+			password.WriteString(string(digits[int(add.Int64())]))
 		} else if len(specSymbSlice) != 0 && contains(specSymbSlice, i) {
 			add, err := rand.Int(rand.Reader, big.NewInt(int64(len(specialSymbols))))
 			if err != nil {
 				log.Panic(err)
 			}
-			password += string(specialSymbols[int(add.Int64())])
+			password.WriteString(string(specialSymbols[int(add.Int64())]))
 		} else {
-			password += string(setOfLetters[counterLetters])
+			password.WriteString(string(setOfLetters[counterLetters]))
 			counterLetters++
 		}
 	}
-	return password
+	return password.String()
 }
 
 func numAmount(l string) int {
-	length, _ := strconv.Atoi(l)
+	length, err := strconv.Atoi(l)
+	if err != nil {
+		log.Panic(err)
+	}
 	digitsAmount, err := rand.Int(rand.Reader, big.NewInt(3)) //[0,1,2]
 	if err != nil {
 		log.Panic(err)
 	}
 	if length <= 10 {
-		return int(digitsAmount.Int64()) + 2
+		return int(digitsAmount.Int64()) + minDigitsAmountForLengthLessThanEleven
 	} else {
-		return int(digitsAmount.Int64()) + 3
+		return int(digitsAmount.Int64()) + minDigitsAmountForLengthMoreThanTen
 	}
 }
 
 func specSymbAmount(l string) int {
-	length, _ := strconv.Atoi(l)
+	length, err := strconv.Atoi(l)
+	if err != nil {
+		log.Panic(err)
+	}
 	symbAmount, err := rand.Int(rand.Reader, big.NewInt(2)) //[0,1]
 	if err != nil {
 		log.Panic(err)
 	}
 	if length <= 10 {
-		return int(symbAmount.Int64()) + 1
+		return int(symbAmount.Int64()) + minSpecSymbAmountForLengthLessThanEleven
 	} else {
-		return int(symbAmount.Int64()) + 2
+		return int(symbAmount.Int64()) + minSpecSymbAmountForLengthMoreThanTen
 	}
 }
 
 func positions(l, isSpecSym string) map[string][]int {
-	length, _ := strconv.Atoi(l)
+	length, err := strconv.Atoi(l)
+	if err != nil {
+		log.Panic(err)
+	}
 	pos := make(map[string][]int, 2)
 	counter := 0
 	numAmo := numAmount(l)
@@ -119,7 +136,7 @@ func contains(slice []int, value int) bool {
 }
 
 func chooseLetters(letterAmount int) (string, bool) {
-	res := ""
+	var res strings.Builder
 	var ok bool
 	for range letterAmount {
 		ranLet, err := rand.Int(rand.Reader, big.NewInt(int64(len(letters))))
@@ -130,7 +147,7 @@ func chooseLetters(letterAmount int) (string, bool) {
 		if resLetter >= 65 && resLetter <= 90 {
 			ok = true
 		}
-		res += string(letters[int(ranLet.Int64())])
+		res.WriteString(string(letters[int(ranLet.Int64())]))
 	}
-	return res, ok
+	return res.String(), ok
 }
