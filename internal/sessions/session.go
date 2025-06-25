@@ -8,6 +8,12 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+const (
+	sessionMaxAge   = 7 * 24 * 60 * 60
+	sessionSecure   = true
+	sessionHttpOnly = true
+)
+
 var store *sessions.CookieStore
 
 func SessionsInit() {
@@ -19,10 +25,10 @@ func SessionsInit() {
 	store = sessions.NewCookieStore([]byte(key))
 	store.Options = &sessions.Options{
 		Path:     "/",
-		MaxAge:   86400 * 7,
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: 1,
+		MaxAge:   sessionMaxAge,
+		HttpOnly: sessionHttpOnly,
+		Secure:   sessionSecure,
+		SameSite: http.SameSiteLaxMode,
 	}
 
 }
@@ -50,4 +56,20 @@ func CheckUserSession(w http.ResponseWriter, r *http.Request) bool {
 	}
 	_, ok := session.Values["user_id"].(int)
 	return ok
+}
+
+func LogoutUser(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Ошибка сессии при выходе", http.StatusInternalServerError)
+		return
+	}
+
+	session.Options.MaxAge = -1
+
+	err = session.Save(r, w)
+	if err != nil {
+		http.Error(w, "Ошибка при сохранении сессии", http.StatusInternalServerError)
+		return
+	}
 }
