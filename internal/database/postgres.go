@@ -60,3 +60,10 @@ func GetUserInfo(u string) *models.User {
 	}
 	return &userInfo
 }
+
+func AddPasswordTodb(site, pass string, userId int) {
+	_, err := db.Exec("INSERT INTO passwords (site, password, user_id) VALUES ($1, $2, $3)", site, pass, userId)
+	if err != nil {
+		log.Panic(err)
+	}
+}
