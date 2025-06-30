@@ -73,3 +73,12 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func GetUserIdFromSession(w http.ResponseWriter, r *http.Request) int {
+	session, err := store.Get(r, "session")
+	if err != nil {
+		http.Error(w, "Ошибка сессии", http.StatusInternalServerError)
+	}
+	userId, _ := session.Values["user_id"].(int)
+	return userId
+}
