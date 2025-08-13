@@ -67,3 +67,24 @@ func AddPasswordTodb(site, pass string, userId int) {
 		log.Panic(err)
 	}
 }
+
+func GetPasswords(userId int) []models.Password {
+	rows, err := db.Query(
+		"SELECT site, password FROM passwords WHERE user_id=$1", userId)
+	if err != nil {
+		log.Panic(err)
+	}
+	defer rows.Close()
+	var allPass []models.Password
+	for rows.Next() {
+		var pass models.Password
+		err := rows.Scan(&pass.Site, &pass.PasswordText)
+		if err != nil {
+			log.Panic("Ошибка при чтении паролей")
+		}
+
+		allPass = append(allPass, pass)
+	}
+
+	return allPass
+}
