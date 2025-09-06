@@ -33,7 +33,7 @@
             <h2>Сохранённые пароли</h2>
             <ul>
                 {{range .Passwords}}
-                    <li><strong>{{.Site}}</strong>: {{.Password}}</li>
+                    <li><strong>{{.Site}}</strong>: {{.PasswordText}}</li>
                 {{else}}
                     <li>Пароли пока не сохранены</li>
                 {{end}}

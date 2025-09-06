@@ -1,6 +1,7 @@
 package user
 
 import (
+	"GenPass/internal/models"
 	"GenPass/internal/sessions"
 	"html/template"
 	"net/http"
@@ -10,7 +11,8 @@ func Dashboard(w http.ResponseWriter, r *http.Request, tmpl *template.Template) 
 	switch r.Method {
 	case "GET":
 		if sessions.CheckUserSession(w, r) {
-			getPasswords(sessions.GetUserIdFromSession(w, r))
+			sp := getPasswords(sessions.GetUserIdFromSession(w, r))
+			tmpl.ExecuteTemplate(w, "dashboard.html", map[string][]models.Password{"Passwords": sp})
 		} else {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return

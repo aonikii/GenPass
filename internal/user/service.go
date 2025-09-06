@@ -2,8 +2,8 @@ package user
 
 import (
 	"GenPass/internal/database"
+	"GenPass/internal/models"
 	"GenPass/internal/password"
-	"log"
 )
 
 func newPasswordCreation(site, length, specialSymbol string, userId int) {
@@ -11,9 +11,7 @@ func newPasswordCreation(site, length, specialSymbol string, userId int) {
 	database.AddPasswordTodb(site, pass, userId)
 }
 
-func getPasswords(userId int) {
+func getPasswords(userId int) []models.Password {
 	allPass := database.GetPasswords(userId)
-	for _, v := range allPass {
-		log.Println(v)
-	}
+	return allPass
 }
