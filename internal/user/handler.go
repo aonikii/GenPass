@@ -39,3 +39,12 @@ func Generate(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	}
 }
+
+func Profile(w http.ResponseWriter, r *http.Request, tmpl *template.Template) {
+	switch r.Method {
+	case "GET":
+		if sessions.CheckUserSession(w, r) {
+			tmpl.ExecuteTemplate(w, "profile.html", "")
+		}
+	}
+}
