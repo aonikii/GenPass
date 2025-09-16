@@ -24,6 +24,7 @@ func main() {
 	http.HandleFunc("/dashboard", func(w http.ResponseWriter, r *http.Request) { user.Dashboard(w, r, tmpl) })
 	http.HandleFunc("/generate", func(w http.ResponseWriter, r *http.Request) { user.Generate(w, r, tmpl) })
 	http.HandleFunc("/profile", func(w http.ResponseWriter, r *http.Request) { user.Profile(w, r, tmpl) })
+	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) { sessions.LogoutUser(w, r) })
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
 	log.Println("Сервер запущен на http://localhost:8080")
