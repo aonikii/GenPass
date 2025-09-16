@@ -72,6 +72,7 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ошибка при сохранении сессии", http.StatusInternalServerError)
 		return
 	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func GetUserIdFromSession(w http.ResponseWriter, r *http.Request) int {
